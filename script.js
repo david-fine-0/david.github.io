@@ -70,53 +70,66 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 	// Contact form validation
 	const contactForm = document.querySelector('.contact-form');
-	if (contactForm) {
-		contactForm.addEventListener('submit', function (e) {
-			// Remove previous errors
-			contactForm.querySelectorAll('.form-error').forEach(el => el.remove());
-			let valid = true;
+		if (contactForm) {
+			contactForm.addEventListener('submit', function (e) {
+				// Remove previous errors and success messages
+				contactForm.querySelectorAll('.form-error, .form-success').forEach(el => el.remove());
+				let valid = true;
 
-			// Name validation
-			const nameInput = contactForm.querySelector('input[name="name"]');
-			if (nameInput && !nameInput.value.trim()) {
-				showError(nameInput, 'Name is required.');
-				valid = false;
-			}
-
-			// Email validation
-			const emailInput = contactForm.querySelector('input[name="email"]');
-			if (emailInput) {
-				const emailVal = emailInput.value.trim();
-				if (!emailVal) {
-					showError(emailInput, 'Email is required.');
-					valid = false;
-				} else if (!/^\S+@\S+\.\S+$/.test(emailVal)) {
-					showError(emailInput, 'Please enter a valid email address.');
+				// Name validation
+				const nameInput = contactForm.querySelector('input[name="name"]');
+				if (nameInput && !nameInput.value.trim()) {
+					showError(nameInput, 'Name is required.');
 					valid = false;
 				}
-			}
 
-			// Message validation
-			const messageInput = contactForm.querySelector('textarea[name="message"]');
-			if (messageInput && !messageInput.value.trim()) {
-				showError(messageInput, 'Message is required.');
-				valid = false;
-			}
+				// Email validation
+				const emailInput = contactForm.querySelector('input[name="email"]');
+				if (emailInput) {
+					const emailVal = emailInput.value.trim();
+					if (!emailVal) {
+						showError(emailInput, 'Email is required.');
+						valid = false;
+					} else if (!/^\S+@\S+\.\S+$/.test(emailVal)) {
+						showError(emailInput, 'Please enter a valid email address.');
+						valid = false;
+					}
+				}
 
-			if (!valid) {
-				e.preventDefault();
-			}
-		});
+				// Message validation
+				const messageInput = contactForm.querySelector('textarea[name="message"]');
+				if (messageInput && !messageInput.value.trim()) {
+					showError(messageInput, 'Message is required.');
+					valid = false;
+				}
 
-		function showError(input, message) {
-			const error = document.createElement('div');
-			error.className = 'form-error';
-			error.textContent = message;
-			error.style.color = '#ef233c';
-			error.style.fontSize = '0.95rem';
-			error.style.marginTop = '4px';
-			error.setAttribute('role', 'alert');
-			input.parentNode.insertBefore(error, input.nextSibling);
+				if (!valid) {
+					e.preventDefault();
+				} else {
+					e.preventDefault();
+					// Show fake success message and reset form
+					const success = document.createElement('div');
+					success.className = 'form-success';
+					success.textContent = 'Thank you! Your message has been sent.';
+					success.style.color = '#2b8a3e';
+					success.style.fontSize = '1.05rem';
+					success.style.marginTop = '12px';
+					success.style.textAlign = 'center';
+					success.setAttribute('role', 'status');
+					contactForm.appendChild(success);
+					contactForm.reset();
+				}
+			});
+
+			function showError(input, message) {
+				const error = document.createElement('div');
+				error.className = 'form-error';
+				error.textContent = message;
+				error.style.color = '#ef233c';
+				error.style.fontSize = '0.95rem';
+				error.style.marginTop = '4px';
+				error.setAttribute('role', 'alert');
+				input.parentNode.insertBefore(error, input.nextSibling);
+			}
 		}
-	}
 });
